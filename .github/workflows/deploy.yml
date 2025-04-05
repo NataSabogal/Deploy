@@ -19,11 +19,12 @@ jobs:
           GIT_REPO: ${{ secrets.GIT_REPO }}
 
         run: |
-          mkdir -p ~/.ssh
+          mkdir -p ~/ .ssh
           echo "$PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H $HOST_NAME >> ~/.ssh/known_hosts
           ssh -T -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key ${USER_NAME}@${HOST_NAME} << EOF
+            set -e
             if [ ! -d "${PROJECT_PATH}/ .git" ]; then
               mkdir -p \$(dirname ${PROJECT_PATH})
               git clone ${GIT_REPO} ${PROJECT_PATH}
